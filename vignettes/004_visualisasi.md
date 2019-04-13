@@ -133,11 +133,7 @@ Pada contoh-contoh di atas, Anda menggunakan nilai `x` dan `y` sebagai `aestheti
 
 ```r
 ggplot(data = evals, aes(x = age)) +
-  geom_abline(binwidth = 5)
-```
-
-```
-## Warning: Ignoring unknown parameters: binwidth
+  geom_histogram(binwidth = 5)
 ```
 
 ![](004_visualisasi_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
@@ -157,6 +153,30 @@ Bagaimana jika Anda menambahkan argumen 'colour = ethnicity' ke dalam `aes()`? A
 
 
 ```r
+evals <- read_csv("https://www.openintro.org/stat/data/evals.csv")
+```
+
+```
+## Parsed with column specification:
+## cols(
+##   .default = col_double(),
+##   rank = col_character(),
+##   ethnicity = col_character(),
+##   gender = col_character(),
+##   language = col_character(),
+##   cls_level = col_character(),
+##   cls_profs = col_character(),
+##   cls_credits = col_character(),
+##   pic_outfit = col_character(),
+##   pic_color = col_character()
+## )
+```
+
+```
+## See spec(...) for full column specifications.
+```
+
+```r
 ggplot(data = evals, aes(x = age, y = score, colour = ethnicity)) +
   geom_point() +
   geom_smooth(method = "lm") +
@@ -168,3 +188,20 @@ ggplot(data = evals, aes(x = age, y = score, colour = ethnicity)) +
 ```
 
 ![](004_visualisasi_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+
+```r
+ggplot(data = evals, aes(x = age, y = score, colour = ethnicity)) +
+  geom_point() +
+  geom_smooth(method = "auto") +
+  labs(
+    x = "sumbu x",
+    y = "sumbu y",
+    title = "sumbu x versus sumbu y"
+  )
+```
+
+```
+## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+```
+
+![](004_visualisasi_files/figure-html/unnamed-chunk-9-2.png)<!-- -->

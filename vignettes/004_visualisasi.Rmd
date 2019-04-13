@@ -70,13 +70,16 @@ Selain menambahkan `aesthetic`, Anda juga dapat menambahkan `geometry` dengan ca
 ggplot(data = evals, aes(x = age, y = bty_avg, colour = gender)) +
   geom_point() +
   geom_line()
+
+
 ```
 
 Pada contoh-contoh di atas, Anda menggunakan nilai `x` dan `y` sebagai `aesthetic`. Bagaimana jika Anda hanya menggunakan `x` saja? Jenis `geometry` apakah yang cocok digunakan jika hanya menggunakan satu nilai `x` tersebut? (Petunjuk: distribusi data)
 
 ```{r}
 ggplot(data = evals, aes(x = age)) +
-  geom_abline(binwidth = 5)
+  geom_histogram(binwidth = 5)
+
 ```
 
 Anda juga dapat membuat grafik yang berisi prediksi model dengan menggunakan `geom_smooth`. Buatlah grafik tersebut dengan menggunakan `geom_point()` dan `geom_smooth()`! Sumbu `x` adalah 'age' dan sumbu `y` adalag 'score'. (Pada contoh ini kita akan menggunakan metode regresi linear untuk model, sehingga argumen pada `geom_smooth()` diisi dengan 'method = "lm"').
@@ -90,9 +93,19 @@ ggplot(data = evals, aes(x = age, y = score)) +
 Bagaimana jika Anda menambahkan argumen 'colour = ethnicity' ke dalam `aes()`? Apakah yang terjadi dan dapatkah Anda menjelaskannya? Anda dipersilahkan untuk  mengganti label atau menambahkan judul pada grafik dengan menggunakan `labs`.
 
 ```{r}
+evals <- read_csv("https://www.openintro.org/stat/data/evals.csv")
 ggplot(data = evals, aes(x = age, y = score, colour = ethnicity)) +
   geom_point() +
   geom_smooth(method = "lm") +
+  labs(
+    x = "sumbu x",
+    y = "sumbu y",
+    title = "sumbu x versus sumbu y"
+  )
+
+ggplot(data = evals, aes(x = age, y = score, colour = ethnicity)) +
+  geom_point() +
+  geom_smooth(method = "auto") +
   labs(
     x = "sumbu x",
     y = "sumbu y",
