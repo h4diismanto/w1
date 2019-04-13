@@ -1796,16 +1796,137 @@ mydata</code></pre>
 <p>Sekarang kita akan membuat versi utuh dari dataset ‘mydata’ dengan menggunakan data seluruh negara pada dataset ‘who’ sebagai berikut:</p>
 <pre class="r"><code># Menjalankan fungsi satu per satu
 tb1 &lt;- gather(who, key = &quot;key&quot;, value = &quot;case&quot;, new_sp_m014:newrel_f65)
-tb2 &lt;- select(tb1, country, year, case)
-tb3 &lt;- group_by(tb2, country, year)
-tb4 &lt;- summarise(tb3, cases = sum(case, na.rm = TRUE))
-tb5 &lt;- ungroup(tb4)
-tb6 &lt;- left_join(tb5, population)</code></pre>
+tb1</code></pre>
+<pre><code>## # A tibble: 405,440 x 6
+##    country     iso2  iso3   year key          case
+##    &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;       &lt;int&gt;
+##  1 Afghanistan AF    AFG    1980 new_sp_m014    NA
+##  2 Afghanistan AF    AFG    1981 new_sp_m014    NA
+##  3 Afghanistan AF    AFG    1982 new_sp_m014    NA
+##  4 Afghanistan AF    AFG    1983 new_sp_m014    NA
+##  5 Afghanistan AF    AFG    1984 new_sp_m014    NA
+##  6 Afghanistan AF    AFG    1985 new_sp_m014    NA
+##  7 Afghanistan AF    AFG    1986 new_sp_m014    NA
+##  8 Afghanistan AF    AFG    1987 new_sp_m014    NA
+##  9 Afghanistan AF    AFG    1988 new_sp_m014    NA
+## 10 Afghanistan AF    AFG    1989 new_sp_m014    NA
+## # ... with 405,430 more rows</code></pre>
+<pre class="r"><code>tb2 &lt;- select(tb1, country, year, case)
+tb2</code></pre>
+<pre><code>## # A tibble: 405,440 x 3
+##    country      year  case
+##    &lt;chr&gt;       &lt;int&gt; &lt;int&gt;
+##  1 Afghanistan  1980    NA
+##  2 Afghanistan  1981    NA
+##  3 Afghanistan  1982    NA
+##  4 Afghanistan  1983    NA
+##  5 Afghanistan  1984    NA
+##  6 Afghanistan  1985    NA
+##  7 Afghanistan  1986    NA
+##  8 Afghanistan  1987    NA
+##  9 Afghanistan  1988    NA
+## 10 Afghanistan  1989    NA
+## # ... with 405,430 more rows</code></pre>
+<pre class="r"><code>tb3 &lt;- group_by(tb2, country, year)
+tb3</code></pre>
+<pre><code>## # A tibble: 405,440 x 3
+## # Groups:   country, year [7,240]
+##    country      year  case
+##    &lt;chr&gt;       &lt;int&gt; &lt;int&gt;
+##  1 Afghanistan  1980    NA
+##  2 Afghanistan  1981    NA
+##  3 Afghanistan  1982    NA
+##  4 Afghanistan  1983    NA
+##  5 Afghanistan  1984    NA
+##  6 Afghanistan  1985    NA
+##  7 Afghanistan  1986    NA
+##  8 Afghanistan  1987    NA
+##  9 Afghanistan  1988    NA
+## 10 Afghanistan  1989    NA
+## # ... with 405,430 more rows</code></pre>
+<pre class="r"><code>tb4 &lt;- summarise(tb3, cases = sum(case, na.rm = TRUE))
+tb4</code></pre>
+<pre><code>## # A tibble: 7,240 x 3
+## # Groups:   country [219]
+##    country      year cases
+##    &lt;chr&gt;       &lt;int&gt; &lt;int&gt;
+##  1 Afghanistan  1980     0
+##  2 Afghanistan  1981     0
+##  3 Afghanistan  1982     0
+##  4 Afghanistan  1983     0
+##  5 Afghanistan  1984     0
+##  6 Afghanistan  1985     0
+##  7 Afghanistan  1986     0
+##  8 Afghanistan  1987     0
+##  9 Afghanistan  1988     0
+## 10 Afghanistan  1989     0
+## # ... with 7,230 more rows</code></pre>
+<pre class="r"><code>tb5 &lt;- ungroup(tb4)
+tb5</code></pre>
+<pre><code>## # A tibble: 7,240 x 3
+##    country      year cases
+##    &lt;chr&gt;       &lt;int&gt; &lt;int&gt;
+##  1 Afghanistan  1980     0
+##  2 Afghanistan  1981     0
+##  3 Afghanistan  1982     0
+##  4 Afghanistan  1983     0
+##  5 Afghanistan  1984     0
+##  6 Afghanistan  1985     0
+##  7 Afghanistan  1986     0
+##  8 Afghanistan  1987     0
+##  9 Afghanistan  1988     0
+## 10 Afghanistan  1989     0
+## # ... with 7,230 more rows</code></pre>
+<pre class="r"><code>tb6 &lt;- left_join(tb5, population)</code></pre>
 <pre><code>## Joining, by = c(&quot;country&quot;, &quot;year&quot;)</code></pre>
+<pre class="r"><code>tb6</code></pre>
+<pre><code>## # A tibble: 7,240 x 4
+##    country      year cases population
+##    &lt;chr&gt;       &lt;int&gt; &lt;int&gt;      &lt;int&gt;
+##  1 Afghanistan  1980     0         NA
+##  2 Afghanistan  1981     0         NA
+##  3 Afghanistan  1982     0         NA
+##  4 Afghanistan  1983     0         NA
+##  5 Afghanistan  1984     0         NA
+##  6 Afghanistan  1985     0         NA
+##  7 Afghanistan  1986     0         NA
+##  8 Afghanistan  1987     0         NA
+##  9 Afghanistan  1988     0         NA
+## 10 Afghanistan  1989     0         NA
+## # ... with 7,230 more rows</code></pre>
 <pre class="r"><code>tb7 &lt;- filter(tb6, !is.na(population))
-tb8 &lt;- mutate(tb7, proportion = 100*cases/population)
-
-# Syntax menggunakan pipe %&gt;%
+tb7</code></pre>
+<pre><code>## # A tibble: 4,037 x 4
+##    country      year cases population
+##    &lt;chr&gt;       &lt;int&gt; &lt;int&gt;      &lt;int&gt;
+##  1 Afghanistan  1995     0   17586073
+##  2 Afghanistan  1996     0   18415307
+##  3 Afghanistan  1997   128   19021226
+##  4 Afghanistan  1998  1778   19496836
+##  5 Afghanistan  1999   745   19987071
+##  6 Afghanistan  2000  2666   20595360
+##  7 Afghanistan  2001  4639   21347782
+##  8 Afghanistan  2002  6509   22202806
+##  9 Afghanistan  2003  6528   23116142
+## 10 Afghanistan  2004  8245   24018682
+## # ... with 4,027 more rows</code></pre>
+<pre class="r"><code>tb8 &lt;- mutate(tb7, proportion = 100*cases/population)
+tb8</code></pre>
+<pre><code>## # A tibble: 4,037 x 5
+##    country      year cases population proportion
+##    &lt;chr&gt;       &lt;int&gt; &lt;int&gt;      &lt;int&gt;      &lt;dbl&gt;
+##  1 Afghanistan  1995     0   17586073   0       
+##  2 Afghanistan  1996     0   18415307   0       
+##  3 Afghanistan  1997   128   19021226   0.000673
+##  4 Afghanistan  1998  1778   19496836   0.00912 
+##  5 Afghanistan  1999   745   19987071   0.00373 
+##  6 Afghanistan  2000  2666   20595360   0.0129  
+##  7 Afghanistan  2001  4639   21347782   0.0217  
+##  8 Afghanistan  2002  6509   22202806   0.0293  
+##  9 Afghanistan  2003  6528   23116142   0.0282  
+## 10 Afghanistan  2004  8245   24018682   0.0343  
+## # ... with 4,027 more rows</code></pre>
+<pre class="r"><code># Syntax menggunakan pipe %&gt;%
 
 tb_all &lt;- 
   who %&gt;% 
@@ -1818,6 +1939,21 @@ tb_all &lt;-
   filter(!is.na(population)) %&gt;% 
   mutate(proportion = 100*cases/population)</code></pre>
 <pre><code>## Joining, by = c(&quot;country&quot;, &quot;year&quot;)</code></pre>
+<pre class="r"><code>tb_all</code></pre>
+<pre><code>## # A tibble: 4,037 x 5
+##    country      year cases population proportion
+##    &lt;chr&gt;       &lt;int&gt; &lt;int&gt;      &lt;int&gt;      &lt;dbl&gt;
+##  1 Afghanistan  1995     0   17586073   0       
+##  2 Afghanistan  1996     0   18415307   0       
+##  3 Afghanistan  1997   128   19021226   0.000673
+##  4 Afghanistan  1998  1778   19496836   0.00912 
+##  5 Afghanistan  1999   745   19987071   0.00373 
+##  6 Afghanistan  2000  2666   20595360   0.0129  
+##  7 Afghanistan  2001  4639   21347782   0.0217  
+##  8 Afghanistan  2002  6509   22202806   0.0293  
+##  9 Afghanistan  2003  6528   23116142   0.0282  
+## 10 Afghanistan  2004  8245   24018682   0.0343  
+## # ... with 4,027 more rows</code></pre>
 <p>Dapatkah Anda membuat ringkasan apa saja hal apa saja yang dilakukan pada proses <em>data wrangling</em> diatas? (Petunjuk: <code>?nama_fungsi</code>)</p>
 <ol style="list-style-type: decimal">
 <li>…</li>

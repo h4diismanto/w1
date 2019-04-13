@@ -97,14 +97,21 @@ Sekarang kita akan membuat versi utuh dari dataset 'mydata' dengan menggunakan d
 ```{r}
 # Menjalankan fungsi satu per satu
 tb1 <- gather(who, key = "key", value = "case", new_sp_m014:newrel_f65)
+tb1
 tb2 <- select(tb1, country, year, case)
+tb2
 tb3 <- group_by(tb2, country, year)
+tb3
 tb4 <- summarise(tb3, cases = sum(case, na.rm = TRUE))
+tb4
 tb5 <- ungroup(tb4)
+tb5
 tb6 <- left_join(tb5, population)
+tb6
 tb7 <- filter(tb6, !is.na(population))
+tb7
 tb8 <- mutate(tb7, proportion = 100*cases/population)
-
+tb8
 # Syntax menggunakan pipe %>%
 
 tb_all <- 
@@ -117,6 +124,7 @@ tb_all <-
   left_join(population) %>% 
   filter(!is.na(population)) %>% 
   mutate(proportion = 100*cases/population)
+tb_all
 ```
 
 Dapatkah Anda membuat ringkasan apa saja hal apa saja yang dilakukan pada proses *data wrangling* diatas? (Petunjuk: `?nama_fungsi`)

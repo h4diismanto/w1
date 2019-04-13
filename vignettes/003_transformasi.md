@@ -339,10 +339,117 @@ Sekarang kita akan membuat versi utuh dari dataset 'mydata' dengan menggunakan d
 ```r
 # Menjalankan fungsi satu per satu
 tb1 <- gather(who, key = "key", value = "case", new_sp_m014:newrel_f65)
+tb1
+```
+
+```
+## # A tibble: 405,440 x 6
+##    country     iso2  iso3   year key          case
+##    <chr>       <chr> <chr> <int> <chr>       <int>
+##  1 Afghanistan AF    AFG    1980 new_sp_m014    NA
+##  2 Afghanistan AF    AFG    1981 new_sp_m014    NA
+##  3 Afghanistan AF    AFG    1982 new_sp_m014    NA
+##  4 Afghanistan AF    AFG    1983 new_sp_m014    NA
+##  5 Afghanistan AF    AFG    1984 new_sp_m014    NA
+##  6 Afghanistan AF    AFG    1985 new_sp_m014    NA
+##  7 Afghanistan AF    AFG    1986 new_sp_m014    NA
+##  8 Afghanistan AF    AFG    1987 new_sp_m014    NA
+##  9 Afghanistan AF    AFG    1988 new_sp_m014    NA
+## 10 Afghanistan AF    AFG    1989 new_sp_m014    NA
+## # ... with 405,430 more rows
+```
+
+```r
 tb2 <- select(tb1, country, year, case)
+tb2
+```
+
+```
+## # A tibble: 405,440 x 3
+##    country      year  case
+##    <chr>       <int> <int>
+##  1 Afghanistan  1980    NA
+##  2 Afghanistan  1981    NA
+##  3 Afghanistan  1982    NA
+##  4 Afghanistan  1983    NA
+##  5 Afghanistan  1984    NA
+##  6 Afghanistan  1985    NA
+##  7 Afghanistan  1986    NA
+##  8 Afghanistan  1987    NA
+##  9 Afghanistan  1988    NA
+## 10 Afghanistan  1989    NA
+## # ... with 405,430 more rows
+```
+
+```r
 tb3 <- group_by(tb2, country, year)
+tb3
+```
+
+```
+## # A tibble: 405,440 x 3
+## # Groups:   country, year [7,240]
+##    country      year  case
+##    <chr>       <int> <int>
+##  1 Afghanistan  1980    NA
+##  2 Afghanistan  1981    NA
+##  3 Afghanistan  1982    NA
+##  4 Afghanistan  1983    NA
+##  5 Afghanistan  1984    NA
+##  6 Afghanistan  1985    NA
+##  7 Afghanistan  1986    NA
+##  8 Afghanistan  1987    NA
+##  9 Afghanistan  1988    NA
+## 10 Afghanistan  1989    NA
+## # ... with 405,430 more rows
+```
+
+```r
 tb4 <- summarise(tb3, cases = sum(case, na.rm = TRUE))
+tb4
+```
+
+```
+## # A tibble: 7,240 x 3
+## # Groups:   country [219]
+##    country      year cases
+##    <chr>       <int> <int>
+##  1 Afghanistan  1980     0
+##  2 Afghanistan  1981     0
+##  3 Afghanistan  1982     0
+##  4 Afghanistan  1983     0
+##  5 Afghanistan  1984     0
+##  6 Afghanistan  1985     0
+##  7 Afghanistan  1986     0
+##  8 Afghanistan  1987     0
+##  9 Afghanistan  1988     0
+## 10 Afghanistan  1989     0
+## # ... with 7,230 more rows
+```
+
+```r
 tb5 <- ungroup(tb4)
+tb5
+```
+
+```
+## # A tibble: 7,240 x 3
+##    country      year cases
+##    <chr>       <int> <int>
+##  1 Afghanistan  1980     0
+##  2 Afghanistan  1981     0
+##  3 Afghanistan  1982     0
+##  4 Afghanistan  1983     0
+##  5 Afghanistan  1984     0
+##  6 Afghanistan  1985     0
+##  7 Afghanistan  1986     0
+##  8 Afghanistan  1987     0
+##  9 Afghanistan  1988     0
+## 10 Afghanistan  1989     0
+## # ... with 7,230 more rows
+```
+
+```r
 tb6 <- left_join(tb5, population)
 ```
 
@@ -351,9 +458,71 @@ tb6 <- left_join(tb5, population)
 ```
 
 ```r
-tb7 <- filter(tb6, !is.na(population))
-tb8 <- mutate(tb7, proportion = 100*cases/population)
+tb6
+```
 
+```
+## # A tibble: 7,240 x 4
+##    country      year cases population
+##    <chr>       <int> <int>      <int>
+##  1 Afghanistan  1980     0         NA
+##  2 Afghanistan  1981     0         NA
+##  3 Afghanistan  1982     0         NA
+##  4 Afghanistan  1983     0         NA
+##  5 Afghanistan  1984     0         NA
+##  6 Afghanistan  1985     0         NA
+##  7 Afghanistan  1986     0         NA
+##  8 Afghanistan  1987     0         NA
+##  9 Afghanistan  1988     0         NA
+## 10 Afghanistan  1989     0         NA
+## # ... with 7,230 more rows
+```
+
+```r
+tb7 <- filter(tb6, !is.na(population))
+tb7
+```
+
+```
+## # A tibble: 4,037 x 4
+##    country      year cases population
+##    <chr>       <int> <int>      <int>
+##  1 Afghanistan  1995     0   17586073
+##  2 Afghanistan  1996     0   18415307
+##  3 Afghanistan  1997   128   19021226
+##  4 Afghanistan  1998  1778   19496836
+##  5 Afghanistan  1999   745   19987071
+##  6 Afghanistan  2000  2666   20595360
+##  7 Afghanistan  2001  4639   21347782
+##  8 Afghanistan  2002  6509   22202806
+##  9 Afghanistan  2003  6528   23116142
+## 10 Afghanistan  2004  8245   24018682
+## # ... with 4,027 more rows
+```
+
+```r
+tb8 <- mutate(tb7, proportion = 100*cases/population)
+tb8
+```
+
+```
+## # A tibble: 4,037 x 5
+##    country      year cases population proportion
+##    <chr>       <int> <int>      <int>      <dbl>
+##  1 Afghanistan  1995     0   17586073   0       
+##  2 Afghanistan  1996     0   18415307   0       
+##  3 Afghanistan  1997   128   19021226   0.000673
+##  4 Afghanistan  1998  1778   19496836   0.00912 
+##  5 Afghanistan  1999   745   19987071   0.00373 
+##  6 Afghanistan  2000  2666   20595360   0.0129  
+##  7 Afghanistan  2001  4639   21347782   0.0217  
+##  8 Afghanistan  2002  6509   22202806   0.0293  
+##  9 Afghanistan  2003  6528   23116142   0.0282  
+## 10 Afghanistan  2004  8245   24018682   0.0343  
+## # ... with 4,027 more rows
+```
+
+```r
 # Syntax menggunakan pipe %>%
 
 tb_all <- 
@@ -370,6 +539,27 @@ tb_all <-
 
 ```
 ## Joining, by = c("country", "year")
+```
+
+```r
+tb_all
+```
+
+```
+## # A tibble: 4,037 x 5
+##    country      year cases population proportion
+##    <chr>       <int> <int>      <int>      <dbl>
+##  1 Afghanistan  1995     0   17586073   0       
+##  2 Afghanistan  1996     0   18415307   0       
+##  3 Afghanistan  1997   128   19021226   0.000673
+##  4 Afghanistan  1998  1778   19496836   0.00912 
+##  5 Afghanistan  1999   745   19987071   0.00373 
+##  6 Afghanistan  2000  2666   20595360   0.0129  
+##  7 Afghanistan  2001  4639   21347782   0.0217  
+##  8 Afghanistan  2002  6509   22202806   0.0293  
+##  9 Afghanistan  2003  6528   23116142   0.0282  
+## 10 Afghanistan  2004  8245   24018682   0.0343  
+## # ... with 4,027 more rows
 ```
 
 Dapatkah Anda membuat ringkasan apa saja hal apa saja yang dilakukan pada proses *data wrangling* diatas? (Petunjuk: `?nama_fungsi`)
